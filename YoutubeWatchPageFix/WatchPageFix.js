@@ -5,8 +5,8 @@
 // @description  Removes some of the changes to the youtube watch page that were implemented on May 9, 2022.Based on Lightbeam24's style for Stylus: https://userstyles.world/style/4623/youtube-watch-page-fix.
 // @author       RedJohn260, Lightbeam24
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
-// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/Youtube%20Watch%20Page%20Fix/Watch%20Page%20Fix.user.js
-// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/Youtube%20Watch%20Page%20Fix/Watch%20Page%20Fix.user.js
+// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubeWatchPageFix/WatchPageFix.js
+// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubeWatchPageFix/WatchPageFix.js
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
