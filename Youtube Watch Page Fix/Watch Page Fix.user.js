@@ -1,16 +1,19 @@
 // ==UserScript==
 // @name         Youtube Watch Page Fix
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  Removes some of the changes to the youtube watch page that were implemented on May 9, 2022.Based on Lightbeam24's style for Stylus: https://userstyles.world/style/4623/youtube-watch-page-fix.
 // @author       RedJohn260, Lightbeam24
+// @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
+// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/Youtube%20Watch%20Page%20Fix/Watch%20Page%20Fix.user.js
+// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/Youtube%20Watch%20Page%20Fix/Watch%20Page%20Fix.user.js
 // @match        https://www.youtube.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
-// @require  https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
-// @require  https://gist.github.com/raw/2625891/waitForKeyElements.js
-// @grant    GM_addStyle
-// @grant    GM.getValue
-// @run-at   document-start
+// @require      https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js
+// @require      https://gist.github.com/raw/2625891/waitForKeyElements.js
+// @grant        GM_addStyle
+// @grant        GM.getValue
+// @run-at       document-start
 // ==/UserScript==
 (function() {
     'use strict';
