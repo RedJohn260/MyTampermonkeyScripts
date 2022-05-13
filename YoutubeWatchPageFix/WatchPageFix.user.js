@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YoutubeWatchPageFix
 // @namespace    http://tampermonkey.net/
-// @version      1.0.1
+// @version      1.0.0
 // @description  Removes some of the changes to the youtube watch page that were implemented on May 9, 2022.Based on Lightbeam24's style for Stylus: https://userstyles.world/style/4623/youtube-watch-page-fix.
 // @author       RedJohn260, Lightbeam24
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
