@@ -2,7 +2,7 @@
 // @name         Play All Button
 // @namespace    http://tampermonkey.net/
 // @version      1.0.0
-// @description  Removes some of the changes to the youtube watch page that were implemented on May 9, 2022.Based on Lightbeam24's style for Stylus: https://userstyles.world/style/4623/youtube-watch-page-fix.
+// @description  This script returns "Play All" button for "Uploads" videos when on channel "Videos" tab.Site refresh (F5) required once on "Videos" channel tab. 
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
 // @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/PlayAllButton/PlayAllButton.user.js
