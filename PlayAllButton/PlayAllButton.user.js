@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Play All Button
 // @namespace    http://tampermonkey.net/
-// @version      1.0.0
+// @version      1.0.1
 // @description  This script returns "Play All" button for "Uploads" videos when on channel "Videos" tab.Site refresh (F5) required once on "Videos" channel tab. 
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
