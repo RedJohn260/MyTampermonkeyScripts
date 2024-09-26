@@ -4,6 +4,9 @@
 // @version      1.4
 // @description  Auto-reload on the YouTube channel's videos page and add a playlist button without infinite loops
 // @author       RedJohn260
+// @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
+// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubePlaylistLinkCreator/YoutubePlaylistLinkCreator.user.js
+// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubePlaylistLinkCreator/YoutubePlaylistLinkCreator.user.js
 // @match        https://www.youtube.com/*
 // @grant        none
 // ==/UserScript==
