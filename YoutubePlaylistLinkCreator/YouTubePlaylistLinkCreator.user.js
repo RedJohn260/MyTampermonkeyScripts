@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Playlist Link Creator
 // @namespace    http://tampermonkey.net/
-// @version      1.4
+// @version      1.5
 // @description  Auto-reload on the YouTube channel's videos page and add a playlist button without infinite loops
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
