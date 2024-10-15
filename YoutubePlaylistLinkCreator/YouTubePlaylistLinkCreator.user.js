@@ -54,7 +54,7 @@
             const button = document.createElement('button');
             button.id = 'temp-playlist-btn';
             button.innerText = 'Create Playlist';
-            button.style.fontFamily = "Roboto","Arial",sans-serif;
+            button.style.fontFamily = "Roboto","Arial";
             button.style.fontSize = "1.4rem";
             button.style.lineHeight = "2rem";
             button.style.fontWeight = 500;
