@@ -15,6 +15,17 @@
 (function() {
     'use strict';
 
+    //Get youtube init data
+    const ytInitialData = window.ytInitialData;
+
+    //Get channel id from yt data, metadata file
+    const channelID = ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
+
+    // Type of playlists channel video urls
+    const playlistUrlAll = `https://www.youtube.com/playlist?list=UU${channelID.slice(2)}`; //All videos
+    const playlistUrlOnlyFull = `https://www.youtube.com/playlist?list=UULF${channelID.slice(2)}`; //Only full videos
+    const playlistUrlAllOnlyShort = `https://www.youtube.com/playlist?list=UUSH${channelID.slice(2)}`; //Only short videos
+
     // Function to reload the page when on /videos tab
     function reloadPageIfOnVideosTab() {
         const currentUrl = window.location.href;
@@ -26,58 +37,73 @@
         }
     }
 
-    // Function to create a temporary playlist link
-    function createTemporaryPlaylist() {
-        const ytInitialData = window.ytInitialData;
-        const channelId = ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
-
-        if (!channelId) {
+    // Function to create a playlist link
+    function CreatePlaylist(playlist_url) {
+        if (!channelID) {
             console.log("YTPLC: Channel ID could not be determined.");
             return;
         }
+        console.log(`YTPLC: Your temporary playlist URL is:\n${playlist_url}`);
+        window.open(playlist_url, '_blank');
+    }
 
-        const playlistUrlAll = `https://www.youtube.com/playlist?list=UU${channelId.slice(2)}`;
-        const playlistUrlOnlyFull = `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`;
-        const playlistUrlAllOnlyShort = `https://www.youtube.com/playlist?list=UUSH${channelId.slice(2)}`;
 
-        console.log(`YTPLC: Your temporary playlist URL is:\n${playlistUrlOnlyFull}`);
-        window.open(playlistUrlOnlyFull, '_blank');
+    // Function to create a button with customizable properties
+    function createButton(buttonId, buttonText, onClickFunction) {
+        const button = document.createElement('button');
+        button.id = buttonId;
+        button.innerText = buttonText;
+        button.style.fontFamily = '"Roboto", "Arial", sans-serif';
+        button.style.fontSize = "14px";
+        button.style.lineHeight = "1.42rem";
+        button.style.fontWeight = 500;
+        button.style.marginLeft = '10px';
+        button.style.padding = '8px 16px';
+        button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'; // YouTube gray
+        button.style.color = '#f1f1f1';
+        button.style.border = 'none';
+        button.style.borderRadius = '8px';
+        button.style.width = "72px";
+        button.style.minWidth = "12px";
+        button.style.height = "32px";
+        button.style.cursor = 'pointer';
+        button.style.filter = "brightness(1) contrast(1) saturate(1)";
+        button.onclick = onClickFunction;
+
+        // Add hover effect
+        button.addEventListener('mouseover', function () {
+            button.style.backgroundColor = '#323232'; // Dark background on hover
+        });
+
+        // Remove hover effect
+        button.addEventListener('mouseout', function () {
+            button.style.backgroundColor = 'rgba(255, 255, 255, 0.1)'; // Reset background color
+        });
+
+        return button;
     }
 
     // Function to add the button to the specified container
-    function addButton() {
+    function addButtons() {
         const buttonContainer = document.querySelector('iron-selector#chips');
         if (!buttonContainer) return;
 
-        // Check if the button already exists
-        if (!document.getElementById('temp-playlist-btn')) {
-            const button = document.createElement('button');
-            button.id = 'temp-playlist-btn';
-            button.innerText = 'Create Playlist';
-            button.style.fontFamily = '"Roboto", "Arial", sans-serif';
-            button.style.fontSize = "1.4rem";
-            button.style.lineHeight = "2rem";
-            button.style.fontWeight = 500;
-            button.style.marginLeft = '10px';
-            button.style.padding = '8px 16px';
-            button.style.backgroundColor = '#0f0f0f'; // YouTube gray
-            button.style.color = 'white';
-            button.style.border = 'none';
-            button.style.borderRadius = '8px';
-            button.style.cursor = 'pointer';
-            button.onclick = createTemporaryPlaylist;
+        // Add Button for all channel videos
+        if (!document.getElementById('playlist-btn-all')) {
+           const button_all = createButton('playlist-btn-all', 'Play All', CreatePlaylist(playlistUrlAll));
+           buttonContainer.appendChild(button_all);
+        }
 
-            // Add a hover effect
-            button.addEventListener('mouseover', function() {
-                button.style.backgroundColor = 'blue';  // Change background color
-            });
+        // Add Button for full channel videos
+        if (!document.getElementById('playlist-btn-full')) {
+            const button_full = createButton('playlist-btn-full', 'Play Full', CreatePlaylist(playlistUrlOnlyFull));
+            buttonContainer.appendChild(button_full);
+        }
 
-            // Remove the hover effect when mouse is not over the button
-            button.addEventListener('mouseout', function() {
-                button.style.backgroundColor = '#323232';  // Reset background color
-            });
-
-            buttonContainer.appendChild(button);
+        // Add Button for short channel videos
+        if (!document.getElementById('playlist-btn-short')) {
+            const button_short = createButton('playlist-btn-short', 'Play Shorts', CreatePlaylist(playlistUrlAllOnlyShort));
+            buttonContainer.appendChild(button_short);
         }
     }
 
@@ -103,7 +129,7 @@
             reloadPageIfOnVideosTab(); // Call function to reload the page
 
             if (currentUrl.includes('/videos')) {
-                addButton(); // Add button when on the channel's video tab
+                addButtons(); // Add buttons when on the channel's video tab
             }
         });
 
