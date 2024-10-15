@@ -15,17 +15,6 @@
 (function() {
     'use strict';
 
-    //Get youtube init data
-    const ytInitialData = window.ytInitialData;
-
-    //Get channel id from yt data, metadata file
-    const channelID = ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
-
-    // Type of playlists channel video urls
-    const playlistUrlAll = `https://www.youtube.com/playlist?list=UU${channelID.slice(2)}`; //All videos
-    const playlistUrlOnlyFull = `https://www.youtube.com/playlist?list=UULF${channelID.slice(2)}`; //Only full videos
-    const playlistUrlAllOnlyShort = `https://www.youtube.com/playlist?list=UUSH${channelID.slice(2)}`; //Only short videos
-
     // Function to reload the page when on /videos tab
     function reloadPageIfOnVideosTab() {
         const currentUrl = window.location.href;
@@ -39,19 +28,18 @@
 
     // Function to create a playlist link
     function CreatePlaylist(playlist_url) {
-        if (!channelID) {
-            console.log("YTPLC: Channel ID could not be determined.");
-            return;
+        try {
+            window.open(playlist_url, '_blank');
+        } catch (error) {
+            console.error('YTPLC: Error accessing storage:', error);
         }
-        console.log(`YTPLC: Your temporary playlist URL is:\n${playlist_url}`);
-        window.open(playlist_url, '_blank');
     }
 
 
     // Function to create a button with customizable properties
-    function createButton(buttonId, buttonText, onClickFunction) {
+    function createButton(buttonText, playlist_url) {
         const button = document.createElement('button');
-        button.id = buttonId;
+        button.id = "playlist-btn";
         button.innerText = buttonText;
         button.style.fontFamily = '"Roboto", "Arial", sans-serif';
         button.style.fontSize = "14px";
@@ -63,13 +51,21 @@
         button.style.color = '#f1f1f1';
         button.style.border = 'none';
         button.style.borderRadius = '8px';
-        button.style.width = "72px";
-        button.style.minWidth = "12px";
-        button.style.height = "32px";
         button.style.cursor = 'pointer';
         button.style.filter = "brightness(1) contrast(1) saturate(1)";
-        button.onclick = onClickFunction;
-
+        // Click event to request storage access and create playlist
+        button.onclick = function () {
+            if (document.hasStorageAccess()) {
+                CreatePlaylist(playlist_url);
+            } else {
+                // Directly request storage access from user gesture
+                document.requestStorageAccess().then(() => {
+                    CreatePlaylist(playlist_url);
+                }).catch(error => {
+                    console.error('YTPLC: Storage access denied:', error);
+                });
+            }
+        };
         // Add hover effect
         button.addEventListener('mouseover', function () {
             button.style.backgroundColor = '#323232'; // Dark background on hover
@@ -84,26 +80,43 @@
     }
 
     // Function to add the button to the specified container
-    function addButtons() {
+    function addButtonsWithRetry(retries = 5) {
+
+        // Check and request storage access
+        const hasAccess = document.hasStorageAccess();
+        if (!hasAccess) {
+            document.requestStorageAccess();
+        }
+
+        const ytInitialData = window.ytInitialData;
+        const channelId = ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
+
+        if (!channelId) {
+            console.log("YTPLC: Channel ID could not be determined.");
+            return;
+        }
+
         const buttonContainer = document.querySelector('iron-selector#chips');
-        if (!buttonContainer) return;
+        if (buttonContainer) {
 
-        // Add Button for all channel videos
-        if (!document.getElementById('playlist-btn-all')) {
-           const button_all = createButton('playlist-btn-all', 'Play All', CreatePlaylist(playlistUrlAll));
-           buttonContainer.appendChild(button_all);
-        }
+            // Add Button for all channel videos
+            if (!document.getElementById('playlist-btn')) {
 
-        // Add Button for full channel videos
-        if (!document.getElementById('playlist-btn-full')) {
-            const button_full = createButton('playlist-btn-full', 'Play Full', CreatePlaylist(playlistUrlOnlyFull));
-            buttonContainer.appendChild(button_full);
-        }
+                const button_all = createButton('Play All', `https://www.youtube.com/playlist?list=UU${channelId.slice(2)}`);
+                buttonContainer.appendChild(button_all);
+                // Add Button for full channel videos
+                const button_full = createButton('Play Full', `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`);
+                buttonContainer.appendChild(button_full);
 
-        // Add Button for short channel videos
-        if (!document.getElementById('playlist-btn-short')) {
-            const button_short = createButton('playlist-btn-short', 'Play Shorts', CreatePlaylist(playlistUrlAllOnlyShort));
-            buttonContainer.appendChild(button_short);
+                // Add Button for short channel videos
+                const button_short = createButton('Play Shorts', `https://www.youtube.com/playlist?list=UUSH${channelId.slice(2)}`);
+                buttonContainer.appendChild(button_short);
+            }
+
+        } else if (retries > 0) {
+            setTimeout(() => addButtonsWithRetry(retries - 1), 500); // Retry after 500ms
+        } else {
+            console.log("YTPLC: Button container not found after several attempts.");
         }
     }
 
@@ -129,7 +142,7 @@
             reloadPageIfOnVideosTab(); // Call function to reload the page
 
             if (currentUrl.includes('/videos')) {
-                addButtons(); // Add buttons when on the channel's video tab
+                addButtonsWithRetry(); // Add buttons when on the channel's video tab
             }
         });
 
