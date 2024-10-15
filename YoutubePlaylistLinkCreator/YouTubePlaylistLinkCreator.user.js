@@ -36,9 +36,12 @@
             return;
         }
 
-        const playlistUrl = `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`;
-        console.log(`YTPLC: Your temporary playlist URL is:\n${playlistUrl}`);
-        window.open(playlistUrl, '_blank');
+        const playlistUrlAll = `https://www.youtube.com/playlist?list=UU${channelId.slice(2)}`;
+        const playlistUrlOnlyFull = `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`;
+        const playlistUrlAllOnlyShort = `https://www.youtube.com/playlist?list=UUSH${channelId.slice(2)}`;
+
+        console.log(`YTPLC: Your temporary playlist URL is:\n${playlistUrlOnlyFull}`);
+        window.open(playlistUrlOnlyFull, '_blank');
     }
 
     // Function to add the button to the specified container
@@ -51,14 +54,28 @@
             const button = document.createElement('button');
             button.id = 'temp-playlist-btn';
             button.innerText = 'Create Playlist';
+            button.style.fontFamily = "Roboto","Arial",sans-serif;
+            button.style.fontSize = "1.4rem";
+            button.style.lineHeight = "2rem";
+            button.style.fontWeight = 500;
             button.style.marginLeft = '10px';
             button.style.padding = '8px 16px';
-            button.style.backgroundColor = '#FF0000'; // YouTube red
-            button.style.color = '#000000';
+            button.style.backgroundColor = '#0f0f0f'; // YouTube gray
+            button.style.color = 'white';
             button.style.border = 'none';
-            button.style.borderRadius = '4px';
+            button.style.borderRadius = '8px';
             button.style.cursor = 'pointer';
             button.onclick = createTemporaryPlaylist;
+
+            // Add a hover effect
+            button.addEventListener('mouseover', function() {
+                button.style.backgroundColor = 'blue';  // Change background color
+            });
+
+            // Remove the hover effect when mouse is not over the button
+            button.addEventListener('mouseout', function() {
+                button.style.backgroundColor = '#323232';  // Reset background color
+            });
 
             buttonContainer.appendChild(button);
         }
