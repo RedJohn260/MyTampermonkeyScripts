@@ -36,7 +36,7 @@
             return;
         }
 
-        const playlistUrl = `https://www.youtube.com/playlist?list=UU${channelId.slice(2)}`;
+        const playlistUrl = `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`;
         console.log(`YTPLC: Your temporary playlist URL is:\n${playlistUrl}`);
         window.open(playlistUrl, '_blank');
     }
