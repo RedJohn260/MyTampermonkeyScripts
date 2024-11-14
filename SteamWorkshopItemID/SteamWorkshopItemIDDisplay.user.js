@@ -1,12 +1,15 @@
 // ==UserScript==
 // @name         Steam Workshop Item ID Display
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/SteamWorkshopItemID/SteamWorkshopItemIDDisplay.user.js
 // @version      1.1
 // @description  Display Steam Workshop item IDs on thumbnails or as tooltips, with a delay to allow loading.
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
+// @homepageURL  https://github.com/RedJohn260/MyTampermonkeyScripts/SteamWorkshopItemID
+// @source       https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/SteamWorkshopItemID/SteamWorkshopItemIDDisplay.user.js
 // @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/SteamWorkshopItemID/SteamWorkshopItemIDDisplay.user.js
 // @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/SteamWorkshopItemID/SteamWorkshopItemIDDisplay.user.js
+// @supportURL   https://github.com/RedJohn260/MyTampermonkeyScripts/issues
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=steamcommunity.com
 // @match        *://steamcommunity.com/workshop/*
 // @grant        none
