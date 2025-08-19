@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Kick Chat Overlay
-// @version      1.0
+// @version      1.1
 // @description  Shows chat messages as overlay on video with customizable settings panel and supports username colors + emotes.
 // @author       RedJohn260
 // @match        https://kick.com/*
@@ -19,6 +19,8 @@
   'use strict';
 
   const settings = {
+    enabled: GM_getValue('enabled', true),
+    pinSide: GM_getValue('pinSide', 'right'), // "right" or "left"
     opacity: GM_getValue('opacity', 0.6),
     fontSize: GM_getValue('fontSize', 18),
     overlayWidth: GM_getValue('overlayWidth', 300),
@@ -37,7 +39,6 @@
   style.textContent = `
     .chat-overlay-container {
       position: absolute;
-      right: 0;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -77,6 +78,7 @@
     #overlaySettingsPanel {
       background: rgba(0,0,0,0.85);
       color: white;
+
       padding: 12px;
       font-family: sans-serif;
       font-size: 14px;
@@ -117,7 +119,7 @@
     input.style.width = '100%';
 
     input.oninput = () => {
-      settings[settingKey] = parseFloat(input.value);
+      settings[settingKey] = isNaN(input.value) ? input.value : parseFloat(input.value);
       valSpan.textContent = settings[settingKey] + (unit || '');
       saveSettings();
       applySettings();
@@ -138,6 +140,7 @@
     input.onchange = () => {
       settings[settingKey] = input.checked;
       saveSettings();
+      applySettings();
     };
 
     label.appendChild(input);
@@ -145,13 +148,39 @@
     return label;
   }
 
+  function createDropdown(labelText, settingKey, options) {
+    const label = document.createElement('label');
+    label.textContent = labelText + ': ';
+
+    const select = document.createElement('select');
+      select.style.backgroundColor = "rgba(0.3,0.3,0.3,0.85)"
+    options.forEach(opt => {
+      const option = document.createElement('option');
+      option.value = opt;
+      option.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+      if (settings[settingKey] === opt) option.selected = true;
+      select.appendChild(option);
+    });
+
+    select.onchange = () => {
+      settings[settingKey] = select.value;
+      saveSettings();
+      applySettings();
+    };
+
+    label.appendChild(select);
+    return label;
+  }
+
   function createSettingsPanel(applySettings, container) {
     const panel = document.createElement('div');
     panel.id = 'overlaySettingsPanel';
 
+    panel.appendChild(createCheckbox('Enable Overlay', 'enabled'));
+    panel.appendChild(createDropdown('Pin Side', 'pinSide', ['left', 'right']));
+    panel.appendChild(createSlider('Overlay Width', 'overlayWidth', 100, 800, 10, 'px'));
     panel.appendChild(createSlider('Background Opacity', 'opacity', 0, 1, 0.05));
     panel.appendChild(createSlider('Font Size', 'fontSize', 10, 30, 1, 'px'));
-    panel.appendChild(createSlider('Overlay Width', 'overlayWidth', 100, 800, 10, 'px'));
     panel.appendChild(createSlider('Top Offset', 'offsetTop', 0, 500, 10, 'px'));
     panel.appendChild(createSlider('Bottom Offset', 'offsetBottom', 0, 500, 10, 'px'));
     panel.appendChild(createSlider('Max Messages', 'maxMessages', 1, 100, 1));
@@ -180,9 +209,14 @@
   }
 
   function applySettings() {
+    if (!overlay) return;
+    overlay.style.display = settings.enabled ? 'flex' : 'none';
     overlay.style.width = `${settings.overlayWidth}px`;
     overlay.style.top = `${settings.offsetTop}px`;
     overlay.style.bottom = `${settings.offsetBottom}px`;
+    overlay.style.left = settings.pinSide === 'left' ? '0' : 'unset';
+    overlay.style.right = settings.pinSide === 'right' ? '0' : 'unset';
+
     for (const msg of overlay.children) {
       msg.style.fontSize = `${settings.fontSize}px`;
       msg.style.background = `rgba(0,0,0,${settings.opacity})`;
@@ -236,7 +270,7 @@
 
     let lastMessageHTML = '';
     const observer = new MutationObserver(() => {
-      // New chat messages container might be nested, adjust if Kick changes layout
+      if (!settings.enabled) return;
       const messages = chat.querySelectorAll('div[style*="transform"] > div');
       if (!messages.length) return;
 
@@ -245,7 +279,6 @@
       if (newHTML && newHTML !== lastMessageHTML) {
         lastMessageHTML = newHTML;
 
-        // Clone full node with styles and emotes
         const clone = lastNode.cloneNode(true);
         clone.className = 'chat-message';
         clone.style.background = `rgba(0,0,0,${settings.opacity})`;
