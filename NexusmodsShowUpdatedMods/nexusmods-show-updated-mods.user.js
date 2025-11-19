@@ -4,6 +4,7 @@
 // @description  Toggle to show only mods with updates available on NexusMods, remembers state, works on page changes.
 // @author       RedJohn260
 // @match        https://www.nexusmods.com/games/*/mods*
+// @match        https://www.nexusmods.com/
 // @icon         https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://www.nexusmods.com/&size=256
 // @source       https://github.com/RedJohn260/MyTampermonkeyScripts/NexusmodsShowUpdatedMods
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
