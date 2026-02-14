@@ -5,8 +5,8 @@
 // @description  Auto-reload on the YouTube channel's videos page and add a playlist button
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
-// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubePlaylistLinkCreator/YoutubePlaylistLinkCreator.user.js
-// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubePlaylistLinkCreator/YoutubePlaylistLinkCreator.user.js
+// @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/refs/heads/main/YoutubePlaylistLinkCreator/YouTubePlaylistLinkCreator.user.js
+// @updateURL    https://github.com/RedJohn260/MyTampermonkeyScripts/raw/refs/heads/main/YoutubePlaylistLinkCreator/YouTubePlaylistLinkCreator.user.js
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=youtube.com
 // @match        https://www.youtube.com/*
 // @grant        none
