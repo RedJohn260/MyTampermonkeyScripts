@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         YouTube Playlist Link Creator
 // @namespace    http://tampermonkey.net/
-// @version      1.7
-// @description  Auto-reload on the YouTube channel's videos page and add a playlist button
+// @version      1.6
+// @description  Auto-reload on the YouTube channel's videos page and add a playlist button without infinite loops
 // @author       RedJohn260
 // @homepage     https://github.com/RedJohn260/MyTampermonkeyScripts
 // @downloadURL  https://github.com/RedJohn260/MyTampermonkeyScripts/raw/main/YoutubePlaylistLinkCreator/YoutubePlaylistLinkCreator.user.js
@@ -53,8 +53,6 @@
         button.style.borderRadius = '8px';
         button.style.cursor = 'pointer';
         button.style.filter = "brightness(1) contrast(1) saturate(1)";
-        button.style.whiteSpace = 'nowrap'; // Prevent text wrapping
-
         // Click event to request storage access and create playlist
         button.onclick = function () {
             if (document.hasStorageAccess()) {
@@ -81,36 +79,8 @@
         return button;
     }
 
-    // Function to find the correct container for the buttons
-    function getButtonContainer() {
-        // Strategy 1: The specific new structure you provided
-        // We look for the <chip-bar-view-model> tag which hosts the buttons
-        let container = document.querySelector('chip-bar-view-model.ytChipBarViewModelHost');
-
-        // Strategy 2: Look inside the header for the chip bar
-        if (!container) {
-            container = document.querySelector('div#header.ytd-rich-grid-renderer chip-bar-view-model');
-        }
-
-        // Strategy 3: Find an existing chip wrapper (div) and use its parent
-        // The chips are wrapped in <div class="ytChipBarViewModelChipWrapper">
-        if (!container) {
-            const existingWrapper = document.querySelector('.ytChipBarViewModelChipWrapper');
-            if (existingWrapper && existingWrapper.parentElement) {
-                container = existingWrapper.parentElement;
-            }
-        }
-
-        // Strategy 4: Old iron-selector fallback (just in case)
-        if (!container) {
-            container = document.querySelector('iron-selector#chips');
-        }
-
-        return container;
-    }
-
     // Function to add the button to the specified container
-    function addButtonsWithRetry(retries = 15) {
+    function addButtonsWithRetry(retries = 5) {
 
         // Check and request storage access
         const hasAccess = document.hasStorageAccess();
@@ -118,45 +88,29 @@
             document.requestStorageAccess();
         }
 
-        // Robust Channel ID detection
-        let channelId = window.ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
-
-        // Fallback: Try to get ID from meta tags
-        if (!channelId) {
-            const metaTag = document.querySelector('meta[itemprop="channelId"]');
-            if (metaTag) {
-                channelId = metaTag.content;
-            }
-        }
+        const ytInitialData = window.ytInitialData;
+        const channelId = ytInitialData?.metadata?.channelMetadataRenderer?.externalId;
 
         if (!channelId) {
-            if (retries > 0) {
-                setTimeout(() => addButtonsWithRetry(retries - 1), 500);
-            } else {
-                console.log("YTPLC: Channel ID could not be determined.");
-            }
+            console.log("YTPLC: Channel ID could not be determined.");
             return;
         }
 
-        const buttonContainer = getButtonContainer();
-
+        const buttonContainer = document.querySelector('iron-selector#chips');
         if (buttonContainer) {
-            // Check if buttons already exist to prevent duplicates
-            if (!document.getElementById('playlist-btn')) {
 
-                // We wrap the button in a div to match the structure of other chips (optional but cleaner)
-                // However, your existing button style works fine as a direct child too.
+            // Add Button for all channel videos
+            if (!document.getElementById('playlist-btn')) {
 
                 const button_all = createButton('Play All', `https://www.youtube.com/playlist?list=UU${channelId.slice(2)}`);
                 buttonContainer.appendChild(button_all);
-
+                // Add Button for full channel videos
                 const button_full = createButton('Play Full', `https://www.youtube.com/playlist?list=UULF${channelId.slice(2)}`);
                 buttonContainer.appendChild(button_full);
 
+                // Add Button for short channel videos
                 const button_short = createButton('Play Shorts', `https://www.youtube.com/playlist?list=UUSH${channelId.slice(2)}`);
                 buttonContainer.appendChild(button_short);
-
-                console.log("YTPLC: Buttons added successfully to chip-bar-view-model.");
             }
 
         } else if (retries > 0) {
